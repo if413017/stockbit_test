@@ -24,5 +24,37 @@ route.post('/', async (req, res) => {
     }
 });
 
+route.get('/', async (req, res) => {
+    try {
+
+        await userServices.getUser( (error, result)=>{
+            if (error) {
+                res.status(httpStatus.BAD_REQUEST).send(responseUtils.failed("Failed create a new user", error));
+            } else {
+                res.status(httpStatus.OK).send(result);
+            }
+        })
+    } catch (e) {
+        console.log(e)
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json(e);
+    }
+});
+
+route.get('/refactor-code/:word', async (req, res) => {
+    try {
+        await userServices.refactorCode( req.params.word, (error, result)=>{
+            if (error) {
+                res.status(httpStatus.BAD_REQUEST).send(responseUtils.failed("Failed refactor code", error));
+            } else {
+                res.status(httpStatus.OK).send(result);
+            }
+        })
+    } catch (e) {
+        console.log(e)
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json(e);
+    }
+});
+
+
 
 module.exports = route;
