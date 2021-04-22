@@ -13,31 +13,23 @@ const responseUtils = require('@utils/responseUtils');
 
 function findFirstStringInBracket(str){
     if(str.length > 0){
-        let indexFirstBracketFound = str.indexOf("(");
-        console.log("indexFirstBracketFound ==", indexFirstBracketFound)
-        if(indexFirstBracketFound >= 0){
-            let wordsAfterFirstBracket = str.substr( indexFirstBracketFound );
-            console.log("wordsAfterFirstBracket ==", wordsAfterFirstBracket)
-            if(wordsAfterFirstBracket){
-                wordsAfterFirstBracket = wordsAfterFirstBracket.substr(1);
-                console.log("wordsAfterFirstBracket2 ==", wordsAfterFirstBracket)
-                let indexClosingBracketFound = wordsAfterFirstBracket.indexOf(")");
-                console.log("indexClosingBracketFound ==", indexClosingBracketFound)
-                if(indexClosingBracketFound >= 0){
-                    return wordsAfterFirstBracket.substring(0,indexClosingBracketFound);
-                }
-                else{
-                    return '';
+        let temp=[],temp2=[], check=0;
+        for(let x=0; x<str.length; x++){
+            if(check===0){
+                if(str[x]==='('){
+                    check=1;
                 }
             }else{
-                return '';
+                if(str[x]===')'){
+                    temp2=temp;
+                    break;
+                }else
+                    temp.push(str[x]);
             }
-        }else{
-            return '';
         }
-    }else{
-        return '';
-    }
+        return temp2.join("");
+    }else
+        return null;
 }
 
 
