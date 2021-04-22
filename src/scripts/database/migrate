@@ -1,0 +1,1 @@
+sequelize model:create --name USER --attributes UserName:string,Parent:integer
