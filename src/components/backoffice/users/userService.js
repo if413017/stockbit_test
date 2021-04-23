@@ -63,7 +63,6 @@ module.exports = {
      * @async
      * @function
      * @desc
-     * @param dataObjcet
      * @param callback
      * @returns {Object} data user
      */
@@ -79,12 +78,65 @@ module.exports = {
      * @async
      * @function
      * @desc
-     * @param dataObjcet
+     * @param word
      * @param callback
      * @returns String
      */
     refactorCode: async (word, callback) => {
 
         callback(null, await findFirstStringInBracket(word));
+    },
+
+    /**
+     * anagram
+     *
+     *
+     * @async
+     * @function
+     * @desc
+     * @param callback
+     * @returns Array
+     */
+    anagram: async (callback) => {
+        let data=['kita', 'atik', 'tika', 'aku', 'makan', 'kia', 'kua']
+        console.log("data")
+        for(let a=0; a<data.length; a++){
+            data[a]=[data[a],0]
+        }
+
+        let id=0, tampung=[]
+        for(let z=0;z<data.length;z++){
+            let temp=[]
+            if(data[z][1]){
+                continue
+            }
+            else{
+                data[z]=[data[z][0],1]
+                temp.push(data[z][0])
+            }
+            for(let x=z+1; x<data.length;x++){
+                if(data[z][0].length==data[x][0].length){
+                    let a = data[z][0];
+                    let b =data[x][0];
+                    let datax=[]
+                    datax.length = data[z][0].length;
+                    for(let c=0;c<a.length;c++){
+                        for(let y=0;y<b.length;y++){
+                            if(!datax[y] && a[c]===b[y]){
+                                datax[y]=b[y]
+                                break;
+                            }
+                        }
+                    }
+                    if(!datax.includes()){
+                        data[x]=[data[x][0],1]
+                        temp.push(data[x][0])
+                    }
+                }
+            }
+            tampung.push(temp)
+            id++;
+        }
+        callback (null,tampung);
     }
 }
