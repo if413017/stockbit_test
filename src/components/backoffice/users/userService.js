@@ -6,9 +6,7 @@
 'use script';
 
 const model = require('@models/index');
-const sequelize = require('sequelize');
 const { QueryTypes } = require('sequelize');
-const { Op } = require('sequelize');
 const responseUtils = require('@utils/responseUtils');
 
 function findFirstStringInBracket(str){

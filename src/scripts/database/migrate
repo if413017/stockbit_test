@@ -1,1 +1,2 @@
 sequelize model:create --name USER --attributes UserName:string,Parent:integer
+sequelize model:create --name MOVIE_LOG --attributes endpoint:string,parameters:json

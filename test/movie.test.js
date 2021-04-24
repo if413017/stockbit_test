@@ -1,11 +1,11 @@
 const expect = require('expect');
 const request = require('supertest');
-const app = require('../index.js');
+const app = require('../app.js');
 
 describe('get /search', () => {
     it('should get all movies', (done) => {
       request(app)
-        .get('/API/v1/search')
+        .get('/API/v1/stockbit/movie/search')
         .query({
             keyword: 'batman',
             page: 1
@@ -21,7 +21,7 @@ describe('get /search', () => {
   describe('get /search without keyword', () => {
     it('should return false if no keyword', (done) => {
       request(app)
-        .get('/API/v1/search')
+        .get('/API/v1/stockbit/movie/search')
         .expect(400)
         .end(done);
     })
@@ -30,7 +30,7 @@ describe('get /search', () => {
   describe('get /detail', () => {
     it('should get detail movie', (done) => {
       request(app)
-        .get('/API/v1/detail')
+        .get('/API/v1/stockbit/movie/detail')
         .query({
             imdbID: 'tt0103359'
         })
@@ -45,7 +45,7 @@ describe('get /search', () => {
   describe('get /detail without imdb id', () => {
     it('should get detail movie', (done) => {
       request(app)
-        .get('/API/v1/detail')
+        .get('/API/v1/stockbit/movie/detail')
         .expect(400)
         .end(done);
     })

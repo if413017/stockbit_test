@@ -3,8 +3,8 @@
 const router = require('express').Router();
 
 const backofficeRouterList = {
-    'stockbit/user': 'backoffice/users/userAPI'
-
+    'stockbit/user': 'backoffice/users/userAPI',
+    'stockbit/movie': 'backoffice/movies/movieAPI'
 }
 
 

@@ -14,10 +14,10 @@
     }
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_name",
-    "host": "127.0.0.1",
+    "username": "if413017",
+    "password": "admin123",
+    "database": "stockbit_db",
+    "host": "www.db4free.net",
     "dialect": "mysql",
     "operatorsAliases": false
   }

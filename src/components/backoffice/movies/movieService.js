@@ -6,137 +6,68 @@
 'use script';
 
 const model = require('@models/index');
-const sequelize = require('sequelize');
-const { QueryTypes } = require('sequelize');
-const { Op } = require('sequelize');
-const responseUtils = require('@utils/responseUtils');
-
-function findFirstStringInBracket(str){
-    if(str.length > 0){
-        let temp=[],temp2=[], check=0;
-        for(let x=0; x<str.length; x++){
-            if(check===0){
-                if(str[x]==='('){
-                    check=1;
-                }
-            }else{
-                if(str[x]===')'){
-                    temp2=temp;
-                    break;
-                }else
-                    temp.push(str[x]);
-            }
-        }
-        return temp2.join("");
-    }else
-        return null;
-}
+const env = process.env;
+const axios = require("axios");
 
 
 module.exports = {
 
     /**
-     * Create a user
+     * Search movies by keyword
      *
      *
      * @async
      * @function
      * @desc
-     * @param dataObjcet
+     * @param params
      * @param callback
-     * @returns {Object} data of created user
+     * @returns {Object} List of movie
      */
-    createUser: async (dataObjcet, callback) => {
-        model.USER.create(dataObjcet).then( res => {
+    retrieveMovies: async (params, callback) => {
+        try {
 
-            callback(null, responseUtils.wrapResult("Successfully create a new user", res));
-            return;
-        }).catch( e => {
-            callback(e);
-        })
-    },
-
-    /**
-     * get user
-     *
-     *
-     * @async
-     * @function
-     * @desc
-     * @param callback
-     * @returns {Object} data user
-     */
-    getUser: async (callback) => {
-        let dataUser = await model.USER.sequelize.query("SELECT `USER`.`id`, `USER`.`UserName`, `Datauser`.`UserName` AS `ParentUserName` FROM `USERs` AS `USER` LEFT OUTER JOIN `USERs` AS `Datauser` ON `USER`.`Parent` = `Datauser`.`id`", { type: QueryTypes.SELECT });
-        callback(null, responseUtils.success("data user retrieved", dataUser));
-    },
-
-    /**
-     * refactor code
-     *
-     *
-     * @async
-     * @function
-     * @desc
-     * @param word
-     * @param callback
-     * @returns String
-     */
-    refactorCode: async (word, callback) => {
-
-        callback(null, await findFirstStringInBracket(word));
-    },
-
-    /**
-     * anagram
-     *
-     *
-     * @async
-     * @function
-     * @desc
-     * @param callback
-     * @returns Array
-     */
-    anagram: async (callback) => {
-        let data=['kita', 'atik', 'tika', 'aku', 'makan', 'kia', 'kua']
-        console.log("data")
-        for(let a=0; a<data.length; a++){
-            data[a]=[data[a],0]
+            if(!params.keyword){
+                return callback("Went wrong")
+            }
+            console.log("env.OMDB_URL")
+            let res = await axios.get(`${env.OMDB_URL}?apikey=${env.OMDB_KEY}&s=${params.keyword}&page=${params.page}`);
+            await model.MOVIE_LOG.create({
+                endpoint:`${env.OMDB_URL}?apikey=${env.OMDB_KEY}&s=${params.keyword}&page=${params.page}`,
+                parameters: params
+            })
+            callback(null, res.data['Search']);
+        } catch (e) {
+            callback(e)
         }
+    },
 
-        let id=0, tampung=[]
-        for(let z=0;z<data.length;z++){
-            let temp=[]
-            if(data[z][1]){
-                continue
+    /**
+     * Get detail movie
+     *
+     *
+     * @async
+     * @function
+     * @desc
+     * @param params
+     * @param callback
+     * @returns {Object} Detail movie
+     */
+    retrieveDetail: async (params, callback) => {
+        try {
+
+            if(!params){
+                return callback("Went wrong")
             }
-            else{
-                data[z]=[data[z][0],1]
-                temp.push(data[z][0])
-            }
-            for(let x=z+1; x<data.length;x++){
-                if(data[z][0].length==data[x][0].length){
-                    let a = data[z][0];
-                    let b =data[x][0];
-                    let datax=[]
-                    datax.length = data[z][0].length;
-                    for(let c=0;c<a.length;c++){
-                        for(let y=0;y<b.length;y++){
-                            if(!datax[y] && a[c]===b[y]){
-                                datax[y]=b[y]
-                                break;
-                            }
-                        }
-                    }
-                    if(!datax.includes()){
-                        data[x]=[data[x][0],1]
-                        temp.push(data[x][0])
-                    }
-                }
-            }
-            tampung.push(temp)
-            id++;
+
+            let res = await axios.get(`${env.OMDB_URL}?apikey=${env.OMDB_KEY}&i=${params}`);
+            await model.MOVIE_LOG.create({
+                endpoint:`${env.OMDB_URL}?apikey=${env.OMDB_KEY}&i=${params}`,
+                parameters: params
+            })
+            callback(null, res.data);
+        } catch (e) {
+            callback(e)
         }
-        callback (null,tampung);
-    }
+    },
+
 }
